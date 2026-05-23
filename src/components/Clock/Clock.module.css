@@ -1,0 +1,17 @@
+.timeWrapper {
+    text-align: center;
+}
+
+.time {
+    font-size: 5.5rem;
+    font-weight: 200;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.date {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    font-weight: 400;
+}

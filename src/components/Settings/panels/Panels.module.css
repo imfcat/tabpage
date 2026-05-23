@@ -1,0 +1,125 @@
+.panelTitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #f8fafc;
+}
+
+.settingsForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="url"],
+.formGroup select {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.formGroup input:focus, 
+.formGroup select:focus {
+    border-color: var(--accent-color);
+}
+
+.fileInput {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+.fileInput::-webkit-file-upload-button {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-color);
+    padding: 6px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.fileInput::-webkit-file-upload-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.primaryBtn {
+    padding: 11px;
+    background: #0284c7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+.primaryBtn:hover {
+    background: var(--accent-color);
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 24px 0;
+}
+
+.manageLinksList {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.manageLinksList::-webkit-scrollbar {
+    width: 5px;
+}
+.manageLinksList::-webkit-scrollbar-track {
+    background: transparent;
+}
+.manageLinksList::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+}
+.manageLinksList::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+.manageItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+}
+
+.deleteBtn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+}
+.deleteBtn:hover {
+    text-decoration: underline;
+}
