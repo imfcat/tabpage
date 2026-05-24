@@ -1,85 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Clock } from './components/Clock';
 import { SearchBar } from './components/SearchBar';
 import { Dock } from './components/Dock';
 import { SettingsDialog } from './components/Settings';
-import type { DockItem } from './types';
+import { useAppStore } from './store/useAppStore';
 import './App.css';
 
-const DEFAULT_LINKS: DockItem[] = [
-    {
-        id: '1',
-        name: '必应',
-        url: 'https://cn.bing.com',
-        icon: 'https://www.bing.com/favicon.ico',
-    },
-    {
-        id: '2',
-        name: 'GitHub',
-        url: 'https://github.com',
-        icon: 'https://github.githubassets.com/favicons/favicon-dark.svg',
-    },
-];
-
 export const App: React.FC = () => {
-    const [dockItems, setDockItems] = useState<DockItem[]>([]);
-    const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
     const [isCenterHovered, setIsCenterHovered] = useState<boolean>(false);
 
-    // 全局状态
-    const [searchEngine, setSearchEngine] = useState<string>('bing');
-    const [timeFormat, setTimeFormat] = useState<string>('24');
+    const _hasHydrated = useAppStore((state) => state._hasHydrated);
+    const bgType = useAppStore((state) => state.bgType);
+    const bgColor = useAppStore((state) => state.bgColor);
+    const bgGradient = useAppStore((state) => state.bgGradient);
+    const bgImgType = useAppStore((state) => state.bgImgType);
+    const bgImgUrl = useAppStore((state) => state.bgImgUrl);
 
-    useEffect(() => {
-        const loadStorageData = async () => {
-            if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-                const data = await chrome.storage.local.get(['dockItems']) as { dockItems?: DockItem[] };
-                setDockItems(data.dockItems || DEFAULT_LINKS);
-            } else {
-                const localData = localStorage.getItem('dockItems');
-                setDockItems(localData ? JSON.parse(localData) : DEFAULT_LINKS);
+    const getBackgroundStyle = (): React.CSSProperties => {
+        if (!_hasHydrated) return {};
+
+        switch (bgType) {
+            case 'color':
+                return { backgroundColor: bgColor, backgroundImage: 'none' };
+            case 'gradient':
+                return { backgroundImage: bgGradient };
+            case 'image': {
+                const finalUrl = bgImgType === 'bing' 
+                    ? 'https://bing.biturl.top/?resolution=1920&format=image' 
+                    : bgImgUrl;
+                return {
+                    backgroundImage: finalUrl ? `url(${finalUrl})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                };
             }
-
-            // 加载基础设置
-            setSearchEngine(localStorage.getItem('searchEngine') || 'bing');
-            setTimeFormat(localStorage.getItem('timeFormat') || '24');
-        };
-        loadStorageData();
-    }, []);
-
-    const saveDockItems = async (newItems: DockItem[]) => {
-        setDockItems(newItems);
-        if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-            await chrome.storage.local.set({ dockItems: newItems });
-        } else {
-            localStorage.setItem('dockItems', JSON.stringify(newItems));
+            case 'default':
+            default:
+                return {};
         }
     };
 
     return (
-        <div className="appViewport">
-            <div 
+        <div className="appViewport" style={getBackgroundStyle()}>
+            <div
                 className="centerContainer"
                 onMouseEnter={() => setIsCenterHovered(true)}
                 onMouseLeave={() => setIsCenterHovered(false)}
             >
-                <Clock timeFormat={timeFormat} />
-                <SearchBar isVisible={isCenterHovered} engine={searchEngine} />
+                <Clock />
+                <SearchBar isVisible={isCenterHovered} />
             </div>
 
-            <Dock items={dockItems} onOpenSettings={() => setIsSettingsOpen(true)} />
-
-            <SettingsDialog
-                isOpen={isSettingsOpen}
-                onClose={() => setIsSettingsOpen(false)}
-                dockItems={dockItems}
-                onAddItem={(item) => saveDockItems([...dockItems, { id: Date.now().toString(), ...item }])}
-                onDeleteItem={(id) => saveDockItems(dockItems.filter(item => item.id !== id))}
-                searchEngine={searchEngine}
-                onEngineChange={(val) => { setSearchEngine(val); localStorage.setItem('searchEngine', val); }}
-                timeFormat={timeFormat}
-                onTimeFormatChange={(val) => { setTimeFormat(val); localStorage.setItem('timeFormat', val); }}
-            />
+            <Dock />
+            <SettingsDialog />
         </div>
     );
 };

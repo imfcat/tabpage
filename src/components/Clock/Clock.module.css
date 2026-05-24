@@ -7,11 +7,13 @@
     font-weight: 200;
     letter-spacing: -2px;
     line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .date {
     font-size: 1.1rem;
-    color: #94a3b8;
+    color: var(--text-color);
     margin-top: 0.5rem;
-    font-weight: 400;
+    font-weight: 300;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }

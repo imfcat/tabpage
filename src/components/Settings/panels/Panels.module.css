@@ -36,7 +36,7 @@
     transition: border-color 0.2s;
 }
 
-.formGroup input:focus, 
+.formGroup input:focus,
 .formGroup select:focus {
     border-color: var(--accent-color);
 }
@@ -45,6 +45,7 @@
     color: #94a3b8;
     font-size: 0.9rem;
 }
+
 .fileInput::-webkit-file-upload-button {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -54,6 +55,7 @@
     margin-right: 10px;
     cursor: pointer;
 }
+
 .fileInput::-webkit-file-upload-button:hover {
     background: rgba(255, 255, 255, 0.15);
 }
@@ -69,6 +71,7 @@
     font-size: 0.95rem;
     transition: background 0.2s;
 }
+
 .primaryBtn:hover {
     background: var(--accent-color);
 }
@@ -91,13 +94,16 @@
 .manageLinksList::-webkit-scrollbar {
     width: 5px;
 }
+
 .manageLinksList::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .manageLinksList::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 10px;
 }
+
 .manageLinksList::-webkit-scrollbar-thumb:hover {
     background: var(--accent-color);
 }
@@ -120,6 +126,85 @@
     padding: 4px 8px;
     font-size: 0.9rem;
 }
+
 .deleteBtn:hover {
     text-decoration: underline;
+}
+
+.colorPickerRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.colorPickerRow input[type="color"] {
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+}
+
+.colorTool {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.tabGroup {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+}
+
+.tabGroup button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tabGroup button.activeTab {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rangeInput {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    outline: none;
+    margin: 10px 0;
+}
+
+.rangeInput::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #0284c7;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    transition: transform 0.1s;
+}
+
+.rangeInput::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
 }

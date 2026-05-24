@@ -1,19 +1,17 @@
 import React from 'react';
-import type { DockItem } from '@/types';
 import { Settings } from '@components/Icon';
+import { useAppStore } from '@store/useAppStore';
 import styles from './Dock.module.css';
 
-interface DockProps {
-    items: DockItem[];
-    onOpenSettings: () => void;
-}
+export const Dock: React.FC = () => {
+    const dockItems = useAppStore((state) => state.dockItems);
+    const setSettingsOpen = useAppStore((state) => state.setSettingsOpen);
 
-export const Dock: React.FC<DockProps> = ({ items, onOpenSettings }) => {
     return (
         <div className={styles.dockTriggerZone}>
             <div className={styles.dockContainer}>
                 <div className={styles.dockLinks}>
-                    {items.map((item) => (
+                    {dockItems.map((item) => (
                         <a
                             key={item.id}
                             href={item.url}
@@ -41,7 +39,10 @@ export const Dock: React.FC<DockProps> = ({ items, onOpenSettings }) => {
                     ))}
                 </div>
                 <div className={styles.dockDivider}></div>
-                <button className={`${styles.dockItem} ${styles.openSettings}`} title="设置" onClick={onOpenSettings}>
+                <button
+                    className={`${styles.dockItem} ${styles.openSettings}`}
+                    title="设置"
+                    onClick={() => setSettingsOpen(true)}>
                     <Settings size={28} />
                 </button>
             </div>

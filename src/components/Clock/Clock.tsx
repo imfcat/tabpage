@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAppStore } from '@store/useAppStore';
 import styles from './Clock.module.css';
 
-interface ClockProps {
-    timeFormat: string;
-}
-
-export const Clock: React.FC<ClockProps> = ({ timeFormat }) => {
+export const Clock: React.FC = () => {
     const [time, setTime] = useState<string>('00:00');
     const [date, setDate] = useState<string>('');
+    const timeFormat = useAppStore((state) => state.timeFormat);
 
     useEffect(() => {
         const updateClock = () => {

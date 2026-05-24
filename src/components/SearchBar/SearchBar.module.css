@@ -12,41 +12,41 @@
 }
 
 .inputContainer {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .inputContainer:focus-within .searchIcon {
-  color: var(--text-muted);
+    color: var(--text-muted);
 }
 
 .searchIcon {
-  position: absolute;
-  left: 20px;
-  color: #64748b;
-  pointer-events: none;
-  transition: color 0.2s;
-  z-index: 1;
+    position: absolute;
+    left: 20px;
+    color: #64748b;
+    pointer-events: none;
+    transition: color 0.2s;
+    z-index: 1;
 }
 
 .searchInput {
-  width: 100%;
-  padding: 14px 24px 14px 52px;
-  font-size: 1rem;
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-color);
-  backdrop-filter: blur(8px);
-  outline: none;
-  transition: all 0.2s;
-  text-align: left;
+    width: 100%;
+    padding: 14px 24px 14px 52px;
+    font-size: 1rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    backdrop-filter: blur(8px);
+    outline: none;
+    transition: all 0.2s;
+    text-align: left;
 }
 
 .searchInput:focus {
-  border-color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 15px rgba(151, 162, 167, 0.2);
+    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(151, 162, 167, 0.2);
 }

@@ -1,36 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
-import type { DockItem } from '@/types';
+import { useAppStore } from '@store/useAppStore';
 import { BasicSettingsPanel } from './panels/BasicSettingsPanel';
 import { LinkManagementPanel } from './panels/LinkManagementPanel';
+import { BackgroundSettingsPanel } from './panels/BackgroundSettingsPanel';
 import styles from './SettingsDialog.module.css';
 
-interface SettingsDialogProps {
-    isOpen: boolean;
-    onClose: () => void;
-    dockItems: DockItem[];
-    onAddItem: (item: Omit<DockItem, 'id'>) => void;
-    onDeleteItem: (id: string) => void;
-    searchEngine: string;
-    onEngineChange: (val: string) => void;
-    timeFormat: string;
-    onTimeFormatChange: (val: string) => void;
-}
+type TabId = 'basic' | 'links' | 'background';
 
-type TabId = 'basic' | 'links';
-
-export const SettingsDialog: React.FC<SettingsDialogProps> = ({
-    isOpen,
-    onClose,
-    dockItems,
-    onAddItem,
-    onDeleteItem,
-    searchEngine,
-    onEngineChange,
-    timeFormat,
-    onTimeFormatChange
-}) => {
+export const SettingsDialog: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [activeTab, setActiveTab] = useState<TabId>('basic');
+    
+    const isOpen = useAppStore((state) => state.isSettingsOpen);
+    const setSettingsOpen = useAppStore((state) => state.setSettingsOpen);
 
     useEffect(() => {
         const dialog = dialogRef.current;
@@ -42,10 +24,12 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
         }
     }, [isOpen]);
 
+    const handleClose = () => setSettingsOpen(false);
+
     return (
-        <dialog ref={dialogRef} className={styles.dialog} onClose={onClose} onClick={(e) => e.target === dialogRef.current && onClose()}>
+        <dialog ref={dialogRef} className={styles.dialog} onClose={handleClose} onClick={(e) => e.target === dialogRef.current && handleClose()}>
             <div className={styles.modalContainer}>
-                <button className={styles.absoluteCloseBtn} onClick={onClose} title="关闭设置">
+                <button className={styles.absoluteCloseBtn} onClick={handleClose} title="关闭设置">
                     &times;
                 </button>
 
@@ -55,22 +39,15 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     </div>
                     <nav className={styles.sidebarNav}>
                         <button className={`${styles.navItem} ${activeTab === 'basic' ? styles.activeNav : ''}`} onClick={() => setActiveTab('basic')}>基础设置</button>
+                        <button className={`${styles.navItem} ${activeTab === 'background' ? styles.activeNav : ''}`} onClick={() => setActiveTab('background')}>背景设置</button>
                         <button className={`${styles.navItem} ${activeTab === 'links' ? styles.activeNav : ''}`} onClick={() => setActiveTab('links')}>导航链接</button>
                     </nav>
                 </aside>
 
                 <main className={styles.contentArea}>
-                    {activeTab === 'basic' && (
-                        <BasicSettingsPanel 
-                            searchEngine={searchEngine}
-                            onEngineChange={onEngineChange}
-                            timeFormat={timeFormat}
-                            onTimeFormatChange={onTimeFormatChange}
-                        />
-                    )}
-                    {activeTab === 'links' && (
-                        <LinkManagementPanel dockItems={dockItems} onAddItem={onAddItem} onDeleteItem={onDeleteItem} />
-                    )}
+                    {activeTab === 'basic' && <BasicSettingsPanel />}
+                    {activeTab === 'background' && <BackgroundSettingsPanel />}
+                    {activeTab === 'links' && <LinkManagementPanel />}
                 </main>
             </div>
         </dialog>

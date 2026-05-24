@@ -1,18 +1,12 @@
 import React from 'react';
-import type { DockItem } from '@/types';
+import { useAppStore } from '@store/useAppStore';
 import styles from './Panels.module.css';
 
-interface LinkManagementPanelProps {
-    dockItems: DockItem[];
-    onAddItem: (item: Omit<DockItem, 'id'>) => void;
-    onDeleteItem: (id: string) => void;
-}
+export const LinkManagementPanel: React.FC = () => {
+    const dockItems = useAppStore((state) => state.dockItems);
+    const addDockItem = useAppStore((state) => state.addDockItem);
+    const deleteDockItem = useAppStore((state) => state.deleteDockItem);
 
-export const LinkManagementPanel: React.FC<LinkManagementPanelProps> = ({
-    dockItems,
-    onAddItem,
-    onDeleteItem,
-}) => {
     const fileToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -49,7 +43,7 @@ export const LinkManagementPanel: React.FC<LinkManagementPanelProps> = ({
         }
 
         if (name && url) {
-            onAddItem({ name, url, icon });
+            addDockItem({ name, url, icon });
             form.reset();
         }
     };
@@ -91,7 +85,7 @@ export const LinkManagementPanel: React.FC<LinkManagementPanelProps> = ({
                                 )}
                                 {item.name}
                             </span>
-                            <button className={styles.deleteBtn} onClick={() => onDeleteItem(item.id)}>删除</button>
+                            <button className={styles.deleteBtn} onClick={() => deleteDockItem(item.id)}>删除</button>
                         </div>
                     ))
                 )}

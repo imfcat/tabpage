@@ -1,20 +1,21 @@
 {
   "name": "pagetab",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:patch": "npm version patch --no-git-tag-version",
-    "build:minor": "npm version minor --no-git-tag-version"
+    "build:patch": "npm version patch --no-git-tag-version && npm run build",
+    "build:minor": "npm version minor --no-git-tag-version && npm run build"
   },
   "dependencies": {
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "vite-tsconfig-paths": "^6.1.1"
+    "vite-tsconfig-paths": "^6.1.1",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

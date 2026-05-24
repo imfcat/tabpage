@@ -1,10 +1,10 @@
 import React from 'react';
 import { Search } from '@components/Icon'; 
+import { useAppStore } from '@store/useAppStore';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
     isVisible: boolean;
-    engine: string;
 }
 
 const ENGINE_MAP: Record<string, { action: string; name: string; placeholder: string }> = {
@@ -13,8 +13,9 @@ const ENGINE_MAP: Record<string, { action: string; name: string; placeholder: st
     baidu: { action: 'https://www.baidu.com/s', name: 'wd', placeholder: '百度一下...' },
 };
 
-export const SearchBar: React.FC<SearchBarProps> = ({ isVisible, engine }) => {
-    const currentEngine = ENGINE_MAP[engine] || ENGINE_MAP.bing;
+export const SearchBar: React.FC<SearchBarProps> = ({ isVisible }) => {
+    const searchEngine = useAppStore((state) => state.searchEngine);
+    const currentEngine = ENGINE_MAP[searchEngine] || ENGINE_MAP.bing;
 
     return (
         <div className={`${styles.searchWrapper} ${isVisible ? styles.visible : ''}`}>
