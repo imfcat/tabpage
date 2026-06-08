@@ -4,26 +4,30 @@ import styles from './DesktopPreview.module.css';
 import { Search } from '@components/Icon'; 
 
 export const DesktopPreview: React.FC = () => {
+    const _hasHydrated = useAppStore((state) => state._hasHydrated);
     const bgType = useAppStore((state) => state.bgType);
     const bgColor = useAppStore((state) => state.bgColor);
     const bgGradient = useAppStore((state) => state.bgGradient);
-    const bgImgType = useAppStore((state) => state.bgImgType);
-    const bgImgUrl = useAppStore((state) => state.bgImgUrl);
+    const bgBlobUrl = useAppStore((state) => state.bgBlobUrl);
 
     const getPreviewStyle = (): React.CSSProperties => {
+        if (!_hasHydrated) {
+            return { backgroundColor: '#14161d', backgroundImage: 'none' };
+        }
+
         switch (bgType) {
             case 'color':
                 return { backgroundColor: bgColor, backgroundImage: 'none' };
             case 'gradient':
                 return { backgroundImage: bgGradient };
             case 'image': {
-                const finalUrl =
-                    bgImgType === 'bing' ? 'https://bing.biturl.top/?resolution=1920&format=image' : bgImgUrl;
                 return {
-                    backgroundImage: finalUrl ? `url(${finalUrl})` : 'none',
+                    backgroundColor: '#14161d',
+                    backgroundImage: bgBlobUrl ? `url(${bgBlobUrl})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
+                    transition: 'background-image 0.4s ease-in-out',
                 };
             }
             case 'default':

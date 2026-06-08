@@ -1,3 +1,12 @@
+export interface Shortcut {
+    id: string;
+    name: string;
+    url: string;
+    icon?: string;
+    ico?: Blob | null;
+    isPinned: boolean;
+}
+
 export interface DockItem {
     id: string;
     name: string;

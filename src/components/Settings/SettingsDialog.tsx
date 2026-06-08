@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useAppStore } from '@store/useAppStore';
 import { BasicSettingsPanel } from './panels/BasicSettingsPanel';
-import { LinkManagementPanel } from './panels/LinkManagementPanel';
 import { BackgroundSettingsPanel } from './panels/BackgroundSettingsPanel';
 import styles from './SettingsDialog.module.css';
 
-type TabId = 'basic' | 'links' | 'background';
+type TabId = 'basic' | 'background';
 
 export const SettingsDialog: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
@@ -40,14 +39,12 @@ export const SettingsDialog: React.FC = () => {
                     <nav className={styles.sidebarNav}>
                         <button className={`${styles.navItem} ${activeTab === 'basic' ? styles.activeNav : ''}`} onClick={() => setActiveTab('basic')}>基础设置</button>
                         <button className={`${styles.navItem} ${activeTab === 'background' ? styles.activeNav : ''}`} onClick={() => setActiveTab('background')}>背景设置</button>
-                        <button className={`${styles.navItem} ${activeTab === 'links' ? styles.activeNav : ''}`} onClick={() => setActiveTab('links')}>导航链接</button>
                     </nav>
                 </aside>
 
                 <main className={styles.contentArea}>
                     {activeTab === 'basic' && <BasicSettingsPanel />}
                     {activeTab === 'background' && <BackgroundSettingsPanel />}
-                    {activeTab === 'links' && <LinkManagementPanel />}
                 </main>
             </div>
         </dialog>
