@@ -1,0 +1,78 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: transparent;
+}
+
+.menu {
+    position: fixed;
+    min-width: 160px;
+    max-width: 280px;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--modal-bg);
+    color: var(--text-color);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menuItem:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.menuItem:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.menuItemDanger {
+    color: #f87171;
+}
+
+.menuItemDanger:hover:not(:disabled) {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fca5a5;
+}
+
+.menuItemIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.menuItemLabel {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.divider {
+    height: 1px;
+    margin: 4px 8px;
+    background: rgba(255, 255, 255, 0.08);
+}
