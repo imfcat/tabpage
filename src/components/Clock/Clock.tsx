@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '@store/useAppStore';
 import styles from './Clock.module.css';
 
-export const Clock: React.FC = () => {
+interface ClockProps {
+    isCompact?: boolean;
+}
+
+export const Clock: React.FC<ClockProps> = ({ isCompact = false }) => {
     const [time, setTime] = useState<string>('00:00');
     const [date, setDate] = useState<string>('');
     const timeFormat = useAppStore((state) => state.timeFormat);
@@ -36,7 +40,7 @@ export const Clock: React.FC = () => {
     }, [timeFormat]);
 
     return (
-        <div className={styles.timeWrapper}>
+        <div className={`${styles.timeWrapper} ${isCompact ? styles.compact : ''}`}>
             <div className={styles.time}>{time}</div>
             <div className={styles.date}>{date}</div>
         </div>

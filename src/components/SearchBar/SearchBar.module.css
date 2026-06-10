@@ -1,18 +1,52 @@
 .searchWrapper {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    width: 100%;
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .searchWrapper.visible,
+.searchWrapper.open,
 .searchWrapper:focus-within {
     opacity: 1;
     transform: translateY(0);
+    max-height: 420px;
+    overflow: visible;
+    pointer-events: auto;
+}
+
+.glassPanel {
+    position: relative;
+    background: rgba(30, 34, 43, 0);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    overflow: hidden;
+    transition:
+        background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.searchWrapper.visible .glassPanel,
+.searchWrapper.open .glassPanel,
+.searchWrapper:focus-within .glassPanel {
+    background: rgba(30, 34, 43, 0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.searchWrapper.expanded .glassPanel {
+    border-radius: 24px;
 }
 
 .inputContainer {
@@ -43,7 +77,7 @@
     border: none;
     color: var(--text-muted);
     outline: none;
-    transition: all 0.2s;
+    transition: color 0.2s;
     text-align: left;
 }
 
@@ -53,6 +87,188 @@
 
 .searchInput:focus {
     color: var(--text-color);
-    border-color: var(--text-muted);
-    box-shadow: 0 0 15px rgba(151, 162, 167, 0.2);
+}
+
+.dropdown {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    max-height: 360px;
+    overflow-y: auto;
+    animation: dropdownReveal 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownReveal {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownSection + .dropdownSection {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sectionLabel {
+    padding: 10px 16px 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: start;
+}
+
+.dropdownList {
+    margin: 0;
+    padding: 4px 8px 8px;
+    list-style: none;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.historyIcon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.historyQuery {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.historyItem {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border-radius: 10px;
+    transition: background 0.15s;
+}
+
+.historyItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.historyItem .dropdownItem {
+    flex: 1;
+    min-width: 0;
+}
+
+.historyItem .dropdownItem:hover {
+    background: transparent;
+}
+
+.historyDeleteBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 4px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: color 0.2s, background 0.2s, opacity 0.15s;
+}
+
+.historyItem:hover .historyDeleteBtn {
+    opacity: 1;
+}
+
+.historyDeleteBtn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.bookmarkIconWrapper {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bookmarkIcon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.bookmarkIconFallback {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.bookmarkInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.bookmarkName {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bookmarkMeta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.tagChip {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    line-height: 1.5;
 }

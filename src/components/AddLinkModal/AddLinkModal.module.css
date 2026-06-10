@@ -1,53 +1,3 @@
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(10, 11, 15, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-}
-
-.modalContent {
-    background: rgba(20, 22, 29, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 24px;
-    width: 90%;
-    max-width: 480px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-    color: var(--text-color);
-    box-sizing: border-box;
-}
-
-.modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 12px;
-}
-
-.modalTitle {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.closeBtn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1rem;
-}
-
 .form {
     display: flex;
     flex-direction: column;
@@ -99,6 +49,13 @@
     display: flex;
     gap: 20px;
     align-items: flex-start;
+}
+
+.fieldColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .previewBox {
@@ -169,4 +126,160 @@
 
 .submitBtn:hover {
     background: var(--accent-hover);
+}
+
+.metaSection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fieldLabel {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.tagChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tagChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px 4px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.82rem;
+    color: var(--text-color);
+}
+
+.tagChipRemove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.tagChipRemove:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.tagInputWrapper {
+    position: relative;
+}
+
+.tagSuggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    background: rgba(20, 22, 29, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    max-height: 160px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.tagSuggestionItem {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.tagSuggestionItem:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tagSuggestionCreate {
+    color: var(--accent-hover);
+}
+
+.categoryRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.select {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.select option {
+    background: #14161d;
+    color: var(--text-color);
+}
+
+.addCategoryBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.addCategoryBtn:hover {
+    color: var(--accent-hover);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: inherit;
 }

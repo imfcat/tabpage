@@ -20,9 +20,13 @@
     padding: 24px;
     width: 90%;
     max-width: 1200px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     color: #f8fafc;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .modalHeader {
@@ -32,6 +36,7 @@
     margin-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     padding-bottom: 12px;
+    flex-shrink: 0;
 }
 
 .modalTitle {
@@ -41,28 +46,44 @@
 }
 
 .closeBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     color: #94a3b8;
     cursor: pointer;
-    font-size: 1rem;
+    padding: 0;
 }
 
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     gap: 24px 16px;
-    max-height: 60vh;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    padding: 4px;
+    padding: 4px 4px 20px;
 }
 
 .gridItem {
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: default;
+}
+
+.gridItemLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
+    width: 100%;
+}
+
+.addGridItem {
     cursor: pointer;
 }
 
@@ -114,4 +135,99 @@
 
 .addLinkName {
     color: rgba(255, 255, 255, 0.5);
+}
+
+.categoryTabsWrapper {
+    flex-shrink: 0;
+    margin: 12px -24px -24px;
+    padding: 0 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.categoryTabs {
+    position: relative;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.categoryTabs::-webkit-scrollbar {
+    display: none;
+}
+
+.categoryIndicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent-hover);
+    border-radius: 2px 2px 0 0;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.categoryTab {
+    position: relative;
+    flex-shrink: 0;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.categoryTab:hover {
+    color: #cbd5e1;
+}
+
+.categoryTabActive {
+    color: #f8fafc;
+}
+
+.categoryTabActive:hover {
+    color: #f8fafc;
+}
+
+.confirmText {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+
+.confirmCancelBtn,
+.confirmDeleteBtn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.confirmCancelBtn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+}
+
+.confirmCancelBtn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.confirmDeleteBtn {
+    border: none;
+    background: #ef4444;
+    color: #fff;
+}
+
+.confirmDeleteBtn:hover {
+    background: #dc2626;
 }

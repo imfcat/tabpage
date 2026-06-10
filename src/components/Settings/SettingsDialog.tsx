@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Close } from '@components/Icon';
 import { useAppStore } from '@store/useAppStore';
 import { BasicSettingsPanel } from './panels/BasicSettingsPanel';
 import { BackgroundSettingsPanel } from './panels/BackgroundSettingsPanel';
+import { BackupSettingsPanel } from './panels/BackupSettingsPanel';
 import styles from './SettingsDialog.module.css';
 
-type TabId = 'basic' | 'background';
+type TabId = 'basic' | 'background' | 'backup';
 
 export const SettingsDialog: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
@@ -29,7 +31,7 @@ export const SettingsDialog: React.FC = () => {
         <dialog ref={dialogRef} className={styles.dialog} onClose={handleClose} onClick={(e) => e.target === dialogRef.current && handleClose()}>
             <div className={styles.modalContainer}>
                 <button className={styles.absoluteCloseBtn} onClick={handleClose} title="关闭设置">
-                    &times;
+                    <Close size={24} />
                 </button>
 
                 <aside className={styles.sidebar}>
@@ -39,12 +41,14 @@ export const SettingsDialog: React.FC = () => {
                     <nav className={styles.sidebarNav}>
                         <button className={`${styles.navItem} ${activeTab === 'basic' ? styles.activeNav : ''}`} onClick={() => setActiveTab('basic')}>基础设置</button>
                         <button className={`${styles.navItem} ${activeTab === 'background' ? styles.activeNav : ''}`} onClick={() => setActiveTab('background')}>背景设置</button>
+                        <button className={`${styles.navItem} ${activeTab === 'backup' ? styles.activeNav : ''}`} onClick={() => setActiveTab('backup')}>备份导出</button>
                     </nav>
                 </aside>
 
                 <main className={styles.contentArea}>
                     {activeTab === 'basic' && <BasicSettingsPanel />}
                     {activeTab === 'background' && <BackgroundSettingsPanel />}
+                    {activeTab === 'backup' && <BackupSettingsPanel />}
                 </main>
             </div>
         </dialog>

@@ -35,6 +35,10 @@
     gap: 10px;
 }
 
+.dockItemWrapper {
+    display: flex;
+}
+
 .dockItem {
     width: 48px;
     height: 48px;

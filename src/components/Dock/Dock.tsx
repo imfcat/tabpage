@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
 import { Settings, Apps } from '@components/Icon';
+import { ContextMenuTrigger } from '@components/ContextMenu';
+import type { ContextMenuItem } from '@components/ContextMenu';
 import { useAppStore } from '@store/useAppStore';
 import { AppsModal } from '@components/AppsModal';
+import type { Shortcut } from '@/types';
 import styles from './Dock.module.css';
 
 export const Dock: React.FC = () => {
     const setSettingsOpen = useAppStore((state) => state.setSettingsOpen);
+    const toggleShortcutPin = useAppStore((state) => state.toggleShortcutPin);
     const [isAppsOpen, setIsAppsOpen] = useState(false);
 
     const shortcuts = useAppStore((state) => state.shortcuts);
     const pinnedShortcuts = shortcuts.filter((item) => item.isPinned);
+
+    const getDockContextMenuItems = (item: Shortcut): ContextMenuItem[] => [
+        {
+            id: 'unpin',
+            label: '从 Dock 移除',
+            onClick: () => toggleShortcutPin(item.id),
+        },
+    ];
 
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>, name: string) => {
         e.currentTarget.style.display = 'none';
@@ -35,33 +47,36 @@ export const Dock: React.FC = () => {
                 
                 <div className={styles.dockLinks}>
                     {pinnedShortcuts.map((item) => (
-                        <a
+                        <ContextMenuTrigger
                             key={item.id}
-                            href={item.url}
-                            className={`${styles.dockItem} ${styles.dockItemAnime}`}
-                            title={item.name}
-                            target="_blank"
-                            rel="noopener noreferrer">
-                            
-                            {item.ico ? (
-                                <img
-                                    src={URL.createObjectURL(item.ico)}
-                                    alt={item.name}
-                                    className={styles.dockIconImg}
-                                    onLoad={(e) => URL.revokeObjectURL(e.currentTarget.src)}
-                                    onError={(e) => handleImgError(e, item.name)}
-                                />
-                            ) : item.icon ? (
-                                <img
-                                    src={item.icon}
-                                    alt={item.name}
-                                    className={styles.dockIconImg}
-                                    onError={(e) => handleImgError(e, item.name)}
-                                />
-                            ) : (
-                                <span className={styles.dockIconText}>{item.name.trim().charAt(0).toUpperCase()}</span>
-                            )}
-                        </a>
+                            className={styles.dockItemWrapper}
+                            items={getDockContextMenuItems(item)}>
+                            <a
+                                href={item.url}
+                                className={`${styles.dockItem} ${styles.dockItemAnime}`}
+                                title={item.name}
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                {item.ico ? (
+                                    <img
+                                        src={URL.createObjectURL(item.ico)}
+                                        alt={item.name}
+                                        className={styles.dockIconImg}
+                                        onLoad={(e) => URL.revokeObjectURL(e.currentTarget.src)}
+                                        onError={(e) => handleImgError(e, item.name)}
+                                    />
+                                ) : item.icon ? (
+                                    <img
+                                        src={item.icon}
+                                        alt={item.name}
+                                        className={styles.dockIconImg}
+                                        onError={(e) => handleImgError(e, item.name)}
+                                    />
+                                ) : (
+                                    <span className={styles.dockIconText}>{item.name.trim().charAt(0).toUpperCase()}</span>
+                                )}
+                            </a>
+                        </ContextMenuTrigger>
                     ))}
                 </div>
                 

@@ -14,6 +14,8 @@ export const BackgroundSettingsPanel: React.FC = () => {
         setBgImgType,
         bgImgUrl,
         setBgImgUrl,
+        bingBgUhd,
+        setBingBgUhd,
         gradientConfig,
         setGradientConfig,
     } = useAppStore();
@@ -175,18 +177,30 @@ export const BackgroundSettingsPanel: React.FC = () => {
                         )}
 
                         {bgImgType === 'bing' && (
-                            <div
-                                style={{
-                                    fontSize: '0.85rem',
-                                    color: '#94a3b8',
-                                    background: 'rgba(255,255,255,0.03)',
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: '1px solid rgba(255,255,255,0.05)',
-                                    lineHeight: '1.5',
-                                }}>
-                                将自动同步获取 Bing 官方每日壁纸作为背景
-                            </div>
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.checkboxLabel}>
+                                        <input
+                                            type="checkbox"
+                                            checked={bingBgUhd}
+                                            onChange={(e) => setBingBgUhd(e.target.checked)}
+                                        />
+                                        使用高清壁纸
+                                    </label>
+                                </div>
+                                <div
+                                    style={{
+                                        fontSize: '0.85rem',
+                                        color: '#94a3b8',
+                                        background: 'rgba(255,255,255,0.03)',
+                                        padding: '12px',
+                                        borderRadius: '8px',
+                                        border: '1px solid rgba(255,255,255,0.05)',
+                                        lineHeight: '1.5',
+                                    }}>
+                                    将自动同步获取 Bing 官方每日壁纸作为背景
+                                </div>
+                            </>
                         )}
                     </>
                 )}

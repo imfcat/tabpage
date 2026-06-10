@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Clock } from './components/Clock';
 import { SearchBar } from './components/SearchBar';
 import { Dock } from './components/Dock';
@@ -7,14 +7,47 @@ import { useAppStore } from './store/useAppStore';
 import './App.css';
 
 export const App: React.FC = () => {
-    const [isCenterHovered, setIsCenterHovered] = useState<boolean>(false);
+    const [isCenterHovered, setIsCenterHovered] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isSearchCompact, setIsSearchCompact] = useState(false);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const _hasHydrated = useAppStore((state) => state._hasHydrated);
     const bgType = useAppStore((state) => state.bgType);
     const bgColor = useAppStore((state) => state.bgColor);
     const bgGradient = useAppStore((state) => state.bgGradient);
-    const bgImgType = useAppStore((state) => state.bgImgType);
-    const bgImgUrl = useAppStore((state) => state.bgImgUrl);
+    const bgBlobUrl = useAppStore((state) => state.bgBlobUrl);
+    const bgBlobUrlOverlay = useAppStore((state) => state.bgBlobUrlOverlay);
+    const completeBgTransition = useAppStore((state) => state.completeBgTransition);
+
+    const [overlayVisible, setOverlayVisible] = useState(false);
+
+    useEffect(() => {
+        if (!bgBlobUrlOverlay) {
+            setOverlayVisible(false);
+            return;
+        }
+
+        setOverlayVisible(false);
+        const frameId = requestAnimationFrame(() => {
+            setOverlayVisible(true);
+        });
+        return () => cancelAnimationFrame(frameId);
+    }, [bgBlobUrlOverlay]);
+
+    const handleBgOverlayTransitionEnd = useCallback((event: React.TransitionEvent<HTMLDivElement>) => {
+        if (event.propertyName !== 'opacity' || !overlayVisible) return;
+        completeBgTransition();
+        setOverlayVisible(false);
+    }, [overlayVisible, completeBgTransition]);
+
+    const isSearchShown = isCenterHovered || isSearchOpen;
+
+    const focusSearch = useCallback(() => {
+        if (isSearchShown) {
+            searchInputRef.current?.focus();
+        }
+    }, [isSearchShown]);
 
     const getBackgroundStyle = (): React.CSSProperties => {
         if (!_hasHydrated) return {};
@@ -24,36 +57,62 @@ export const App: React.FC = () => {
                 return { backgroundColor: bgColor, backgroundImage: 'none' };
             case 'gradient':
                 return { backgroundImage: bgGradient };
-            case 'image': {
-                const finalUrl = bgImgType === 'bing' 
-                    ? 'https://bing.biturl.top/?resolution=1920&format=image' 
-                    : bgImgUrl;
-                return {
-                    backgroundImage: finalUrl ? `url(${finalUrl})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                };
-            }
+            case 'image':
+                return {};
             case 'default':
             default:
                 return {};
         }
     };
 
+    const centerClassName = [
+        'centerContainer',
+        isSearchShown ? 'searchOpen' : '',
+        isSearchCompact ? 'searchCompact' : '',
+    ]
+        .filter(Boolean)
+        .join(' ');
+
+    const showBgLayers = _hasHydrated && bgType === 'image' && (bgBlobUrl || bgBlobUrlOverlay);
+
     return (
         <div className="appViewport" style={getBackgroundStyle()}>
-            <div
-                className="centerContainer"
-                onMouseEnter={() => setIsCenterHovered(true)}
-                onMouseLeave={() => setIsCenterHovered(false)}
-            >
-                <Clock />
-                <SearchBar isVisible={isCenterHovered} />
-            </div>
+            {showBgLayers && (
+                <div className="appBgLayers" aria-hidden="true">
+                    {bgBlobUrl && (
+                        <div
+                            className="appBgLayer"
+                            style={{ backgroundImage: `url(${bgBlobUrl})` }}
+                        />
+                    )}
+                    {bgBlobUrlOverlay && (
+                        <div
+                            className={`appBgLayer appBgLayerOverlay${overlayVisible ? ' visible' : ''}`}
+                            style={{ backgroundImage: `url(${bgBlobUrlOverlay})` }}
+                            onTransitionEnd={handleBgOverlayTransitionEnd}
+                        />
+                    )}
+                </div>
+            )}
+            <div className="appContent">
+                <div
+                    className={centerClassName}
+                    onMouseEnter={() => setIsCenterHovered(true)}
+                    onMouseLeave={() => setIsCenterHovered(false)}
+                    onClick={focusSearch}>
+                    <Clock isCompact={isSearchCompact} />
+                    <SearchBar
+                        ref={searchInputRef}
+                        isVisible={isCenterHovered}
+                        isOpen={isSearchOpen}
+                        onOpenChange={setIsSearchOpen}
+                        onCompactChange={setIsSearchCompact}
+                    />
+                </div>
 
-            <Dock />
-            <SettingsDialog />
+                <Dock />
+                <SettingsDialog />
+            </div>
         </div>
     );
 };
