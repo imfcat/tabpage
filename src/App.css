@@ -83,5 +83,5 @@
 
 .centerContainer.searchCompact {
     gap: 0.75rem;
-    transform: translateY(-100px);
+    transform: translateY(calc(-100px - 10vh));
 }

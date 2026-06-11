@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '@components/Modal';
 import { useAppStore } from '@store/useAppStore';
+import type { Category } from '@/types';
 import styles from './AddCategoryModal.module.css';
 
 interface AddCategoryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAdded: (categoryId: string) => void;
+    onAdded?: (categoryId: string) => void;
+    category?: Category;
 }
 
-export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ isOpen, onClose, onAdded }) => {
+export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
+    isOpen,
+    onClose,
+    onAdded,
+    category,
+}) => {
+    const isEditMode = !!category;
     const addCategory = useAppStore((state) => state.addCategory);
+    const updateCategory = useAppStore((state) => state.updateCategory);
     const [name, setName] = useState('');
+
+    useEffect(() => {
+        if (!isOpen) return;
+        setName(category?.name ?? '');
+    }, [isOpen, category]);
 
     const handleClose = () => {
         setName('');
@@ -23,10 +37,16 @@ export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ isOpen, onCl
         const trimmed = name.trim();
         if (!trimmed) return;
 
+        if (isEditMode && category) {
+            await updateCategory(category.id, { name: trimmed });
+            handleClose();
+            return;
+        }
+
         try {
-            const category = await addCategory(trimmed);
+            const newCategory = await addCategory(trimmed);
             setName('');
-            onAdded(category.id);
+            onAdded?.(newCategory.id);
             onClose();
         } catch {
             alert('分类名称不能为空');
@@ -37,7 +57,7 @@ export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ isOpen, onCl
         <Modal
             isOpen={isOpen}
             onClose={handleClose}
-            title="添加分类"
+            title={isEditMode ? '编辑分类' : '添加分类'}
             maxWidth={360}
             zIndex={10001}>
             <form onSubmit={handleSubmit} className={styles.form}>
@@ -51,7 +71,7 @@ export const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ isOpen, onCl
                     autoFocus
                 />
                 <button type="submit" className={styles.submitBtn} disabled={!name.trim()}>
-                    确认添加
+                    {isEditMode ? '保存修改' : '确认添加'}
                 </button>
             </form>
         </Modal>

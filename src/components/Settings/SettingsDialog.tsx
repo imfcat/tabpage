@@ -4,9 +4,10 @@ import { useAppStore } from '@store/useAppStore';
 import { BasicSettingsPanel } from './panels/BasicSettingsPanel';
 import { BackgroundSettingsPanel } from './panels/BackgroundSettingsPanel';
 import { BackupSettingsPanel } from './panels/BackupSettingsPanel';
+import { BrowserBookmarkImportPanel } from './panels/BrowserBookmarkImportPanel';
 import styles from './SettingsDialog.module.css';
 
-type TabId = 'basic' | 'background' | 'backup';
+type TabId = 'basic' | 'background' | 'browserImport' | 'backup';
 
 export const SettingsDialog: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
@@ -41,6 +42,7 @@ export const SettingsDialog: React.FC = () => {
                     <nav className={styles.sidebarNav}>
                         <button className={`${styles.navItem} ${activeTab === 'basic' ? styles.activeNav : ''}`} onClick={() => setActiveTab('basic')}>基础设置</button>
                         <button className={`${styles.navItem} ${activeTab === 'background' ? styles.activeNav : ''}`} onClick={() => setActiveTab('background')}>背景设置</button>
+                        <button className={`${styles.navItem} ${activeTab === 'browserImport' ? styles.activeNav : ''}`} onClick={() => setActiveTab('browserImport')}>导入书签</button>
                         <button className={`${styles.navItem} ${activeTab === 'backup' ? styles.activeNav : ''}`} onClick={() => setActiveTab('backup')}>备份导出</button>
                     </nav>
                 </aside>
@@ -48,6 +50,7 @@ export const SettingsDialog: React.FC = () => {
                 <main className={styles.contentArea}>
                     {activeTab === 'basic' && <BasicSettingsPanel />}
                     {activeTab === 'background' && <BackgroundSettingsPanel />}
+                    {activeTab === 'browserImport' && <BrowserBookmarkImportPanel />}
                     {activeTab === 'backup' && <BackupSettingsPanel />}
                 </main>
             </div>

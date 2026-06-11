@@ -78,3 +78,9 @@ export interface BackupImportResult {
     tagsAdded: number;
     categoriesAdded: number;
 }
+
+export interface BrowserBookmarkImportResult {
+    shortcutsAdded: number;
+    shortcutsSkipped: number;
+    tagsAdded: number;
+}

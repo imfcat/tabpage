@@ -11,8 +11,10 @@ import type {
     BackupImportResult,
     AppSettings,
     SearchHistoryItem,
+    BrowserBookmarkImportResult,
 } from '@/types';
 import { BACKUP_FILE_VERSION } from '@/utils/backup';
+import type { BrowserBookmarkEntry } from '@/utils/browserBookmarks';
 import { getBingWallpaperUrl } from '@/utils/bingWallpaper';
 
 interface AppState {
@@ -81,6 +83,7 @@ interface AppState {
 
     buildBackup: (options: { includeBookmarks: boolean; includeSettings: boolean }) => BackupFile;
     importBackup: (data: BackupFile) => Promise<BackupImportResult>;
+    importBrowserBookmarks: (entries: BrowserBookmarkEntry[]) => Promise<BrowserBookmarkImportResult>;
 }
 
 const MAX_SEARCH_HISTORY = 20;
@@ -795,6 +798,46 @@ export const useAppStore = create<AppState>()(
                     shortcuts: currentShortcuts,
                 });
 
+                return result;
+            },
+
+            importBrowserBookmarks: async (entries) => {
+                const result: BrowserBookmarkImportResult = {
+                    shortcutsAdded: 0,
+                    shortcutsSkipped: 0,
+                    tagsAdded: 0,
+                };
+
+                const tagsCountBefore = get().tags.length;
+                const seenUrls = new Set(
+                    get().shortcuts.map((item) => item.url.toLowerCase()),
+                );
+
+                for (const entry of entries) {
+                    const normalizedUrl = entry.url.toLowerCase();
+                    if (seenUrls.has(normalizedUrl)) {
+                        result.shortcutsSkipped += 1;
+                        continue;
+                    }
+
+                    let tagIds: string[] | undefined;
+                    if (entry.tagNames.length > 0) {
+                        tagIds = await get().resolveOrCreateTags(entry.tagNames);
+                    }
+
+                    await get().addShortcut({
+                        name: entry.name,
+                        url: entry.url,
+                        icon: entry.icon,
+                        isPinned: false,
+                        tagIds: tagIds?.length ? tagIds : undefined,
+                    });
+
+                    seenUrls.add(normalizedUrl);
+                    result.shortcutsAdded += 1;
+                }
+
+                result.tagsAdded = get().tags.length - tagsCountBefore;
                 return result;
             },
         }),

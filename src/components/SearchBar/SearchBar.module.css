@@ -1,13 +1,11 @@
 .searchWrapper {
     position: relative;
     width: 100%;
-    opacity: 0;
     transform: translateY(10px);
     max-height: 0;
     overflow: hidden;
     pointer-events: none;
     transition:
-        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
         transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
         max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -15,9 +13,8 @@
 .searchWrapper.visible,
 .searchWrapper.open,
 .searchWrapper:focus-within {
-    opacity: 1;
     transform: translateY(0);
-    max-height: 420px;
+    max-height: 56px;
     overflow: visible;
     pointer-events: auto;
 }
@@ -25,28 +22,20 @@
 .glassPanel {
     position: relative;
     background: rgba(30, 34, 43, 0);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: blur(20px);
     border: 1px solid transparent;
     border-radius: 30px;
-    overflow: hidden;
+    overflow: visible;
     transition:
         background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-radius 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .searchWrapper.visible .glassPanel,
 .searchWrapper.open .glassPanel,
 .searchWrapper:focus-within .glassPanel {
     background: rgba(30, 34, 43, 0.35);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-color: rgba(255, 255, 255, 0.12);
-}
-
-.searchWrapper.expanded .glassPanel {
-    border-radius: 24px;
 }
 
 .inputContainer {
@@ -54,6 +43,14 @@
     width: 100%;
     display: flex;
     align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.searchWrapper.visible .inputContainer,
+.searchWrapper.open .inputContainer,
+.searchWrapper:focus-within .inputContainer {
+    opacity: 1;
 }
 
 .inputContainer:focus-within .searchIcon {
@@ -90,20 +87,30 @@
 }
 
 .dropdown {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    max-height: 360px;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(30, 34, 43, 0.45);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    max-height: min(360px, 42vh);
     overflow-y: auto;
-    animation: dropdownReveal 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+    animation: dropdownPopIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes dropdownReveal {
+@keyframes dropdownPopIn {
     from {
         opacity: 0;
-        transform: translateY(-6px);
+        transform: translateY(-10px) scaleY(0.96);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scaleY(1);
     }
 }
 

@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from
 import { useAppStore } from '@store/useAppStore';
 import { Plus, Close } from '@components/Icon';
 import { AddLinkModal } from '@components/AddLinkModal';
+import { AddCategoryModal } from '@components/AddLinkModal/AddCategoryModal';
 import { ContextMenuTrigger } from '@components/ContextMenu';
 import type { ContextMenuItem } from '@components/ContextMenu';
 import { Modal } from '@components/Modal';
-import type { Shortcut } from '@/types';
+import type { Shortcut, Category } from '@/types';
 import styles from './AppsModal.module.css';
 
 interface AppsModalProps {
@@ -22,6 +23,7 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
     const [isAddLinkOpen, setIsAddLinkOpen] = useState(false);
     const [editingShortcut, setEditingShortcut] = useState<Shortcut | null>(null);
     const [deletingShortcut, setDeletingShortcut] = useState<Shortcut | null>(null);
+    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [activeCategoryId, setActiveCategoryId] = useState('all');
     const tabsContainerRef = useRef<HTMLDivElement>(null);
     const tabButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -34,9 +36,11 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
             setIndicatorStyle({ width: 0, transform: 'translateX(0px)' });
             return;
         }
+        const containerRect = container.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
         setIndicatorStyle({
-            width: activeTab.offsetWidth,
-            transform: `translateX(${activeTab.offsetLeft}px)`,
+            width: tabRect.width,
+            transform: `translateX(${tabRect.left - containerRect.left + container.scrollLeft}px)`,
         });
     }, [activeCategoryId]);
 
@@ -61,6 +65,14 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
 
     const filteredShortcuts =
         activeCategoryId === 'all' ? shortcuts : shortcuts.filter((item) => item.categoryId === activeCategoryId);
+
+    const getCategoryContextMenuItems = (category: Category): ContextMenuItem[] => [
+        {
+            id: 'edit-category',
+            label: '编辑',
+            onClick: () => setEditingCategory(category),
+        },
+    ];
 
     const getContextMenuItems = (item: Shortcut): ContextMenuItem[] => [
         {
@@ -158,7 +170,10 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
 
                     {categories.length > 0 && (
                         <div className={styles.categoryTabsWrapper}>
-                            <div className={styles.categoryTabs} ref={tabsContainerRef}>
+                            <div
+                                className={styles.categoryTabs}
+                                ref={tabsContainerRef}
+                                onScroll={updateIndicator}>
                                 <span
                                     className={styles.categoryIndicator}
                                     style={indicatorStyle}
@@ -172,14 +187,18 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
                                     全部
                                 </button>
                                 {categories.map((cat) => (
-                                    <button
+                                    <ContextMenuTrigger
                                         key={cat.id}
-                                        type="button"
-                                        ref={(el) => { tabButtonRefs.current[cat.id] = el; }}
-                                        className={`${styles.categoryTab} ${activeCategoryId === cat.id ? styles.categoryTabActive : ''}`}
-                                        onClick={() => setActiveCategoryId(cat.id)}>
-                                        {cat.name}
-                                    </button>
+                                        className={styles.categoryTabWrapper}
+                                        items={getCategoryContextMenuItems(cat)}>
+                                        <button
+                                            type="button"
+                                            ref={(el) => { tabButtonRefs.current[cat.id] = el; }}
+                                            className={`${styles.categoryTab} ${activeCategoryId === cat.id ? styles.categoryTabActive : ''}`}
+                                            onClick={() => setActiveCategoryId(cat.id)}>
+                                            {cat.name}
+                                        </button>
+                                    </ContextMenuTrigger>
                                 ))}
                             </div>
                         </div>
@@ -193,6 +212,12 @@ export const AppsModal: React.FC<AppsModalProps> = ({ isOpen, onClose }) => {
                 isOpen={!!editingShortcut}
                 onClose={() => setEditingShortcut(null)}
                 shortcut={editingShortcut ?? undefined}
+            />
+
+            <AddCategoryModal
+                isOpen={!!editingCategory}
+                onClose={() => setEditingCategory(null)}
+                category={editingCategory ?? undefined}
             />
 
             <Modal

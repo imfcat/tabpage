@@ -24,6 +24,40 @@ const ENGINE_MAP: Record<string, { action: string; name: string; placeholder: st
 };
 
 const MAX_BOOKMARK_RESULTS = 8;
+const MIN_BOOKMARK_QUERY_LENGTH = 2;
+
+const MEANINGFUL_CHAR = /[a-z0-9\u4e00-\u9fff]/;
+
+function stripUrlPrefixes(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '');
+}
+
+function hasMeaningfulChars(value: string): boolean {
+    return MEANINGFUL_CHAR.test(value);
+}
+
+function isBookmarkSearchable(query: string): boolean {
+    const q = query.trim().toLowerCase();
+    if (q.length < MIN_BOOKMARK_QUERY_LENGTH) return false;
+    if (!hasMeaningfulChars(q)) return false;
+
+    const urlStripped = stripUrlPrefixes(q);
+    if (urlStripped.length === 0) return false;
+    if (urlStripped.length < MIN_BOOKMARK_QUERY_LENGTH) return false;
+
+    return true;
+}
+
+function matchesBookmarkUrl(url: string, query: string): boolean {
+    const urlQuery = stripUrlPrefixes(query.trim().toLowerCase());
+    if (urlQuery.length < MIN_BOOKMARK_QUERY_LENGTH || !hasMeaningfulChars(urlQuery)) {
+        return false;
+    }
+    return stripUrlPrefixes(url).includes(urlQuery);
+}
 
 function searchBookmarks(
     query: string,
@@ -32,11 +66,12 @@ function searchBookmarks(
     categories: Category[],
 ): BookmarkMatch[] {
     const q = query.trim().toLowerCase();
-    if (!q) return [];
+    if (!isBookmarkSearchable(q)) return [];
 
     return shortcuts
         .filter((shortcut) => {
             if (shortcut.name.toLowerCase().includes(q)) return true;
+            if (matchesBookmarkUrl(shortcut.url, q)) return true;
             if (shortcut.comment?.toLowerCase().includes(q)) return true;
             const category = categories.find((c) => c.id === shortcut.categoryId);
             if (category?.name.toLowerCase().includes(q)) return true;
@@ -238,7 +273,7 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
     return (
         <div
             ref={wrapperRef}
-            className={`${styles.searchWrapper} ${isVisible ? styles.visible : ''} ${isOpen ? styles.open : ''} ${showDropdown ? styles.expanded : ''}`}
+            className={`${styles.searchWrapper} ${isVisible ? styles.visible : ''} ${isOpen ? styles.open : ''}`}
             onClick={stopPropagation}>
             <div className={styles.glassPanel}>
                 <form onSubmit={handleSubmit}>
@@ -261,10 +296,11 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
                         />
                     </div>
                 </form>
+            </div>
 
-                {showDropdown && (
-                    <div className={styles.dropdown}>
-                        {hasQuery && bookmarkMatches.length > 0 && (
+            {showDropdown && (
+                <div className={styles.dropdown}>
+                    {hasQuery && bookmarkMatches.length > 0 && (
                             <div className={styles.dropdownSection}>
                                 <div className={styles.sectionLabel}>书签</div>
                                 <ul className={styles.dropdownList}>
@@ -330,9 +366,8 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(function S
                                 </ul>
                             </div>
                         )}
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 });
